@@ -36,7 +36,7 @@ namespace Syy.Tools.DefineEditor
             {
                 _scroll = scroll.scrollPosition;
 
-                foreach (var group in _builder.Data)
+                foreach (var group in _builder.Data.OrderBy(value => value.Name))
                 {
                     using (new EditorGUILayout.VerticalScope("box"))
                     {
