@@ -13,6 +13,9 @@ namespace Syy.Tools.Samples
         {
             var builder = UnityDefineEditor.Open();
 
+            var DEBUG_MODE = new Define("DEBUG_MODE", "Enable Debug mode");
+            var ENABLE_LOG = new Define("ENABLE_LOG", "Enable log");
+
             var develop = builder.CreateDefineGroup("Develop", "Develop Mode");
             develop.RegisterDefine(DEBUG_MODE);
             develop.RegisterDefine(ENABLE_LOG);
@@ -22,8 +25,5 @@ namespace Syy.Tools.Samples
 
             builder.CreateDefineGroup("Release", "Game Release Mode. No Define.");
         }
-
-        private const string DEBUG_MODE = "DEBUG_MODE";
-        private const string ENABLE_LOG = "ENABLE_LOG";
     }
 }

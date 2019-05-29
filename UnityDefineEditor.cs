@@ -75,7 +75,9 @@ namespace Syy.Tools.DefineEditor
                         EditorGUILayout.LabelField("Description : " + group.Description);
                         for (int i = 0; i < group.Defines.Count; i++)
                         {
-                            EditorGUILayout.LabelField($"Define{i + 1} : " + group.Defines[i].Name);
+                            var define = group.Defines[i];
+                            var guiContent = new GUIContent($"Define{i + 1} : " + define.Name, define.Comment);
+                            EditorGUILayout.LabelField(guiContent);
                         }
 
                         EditorGUILayout.Space();
@@ -84,7 +86,7 @@ namespace Syy.Tools.DefineEditor
 
                 if (GUILayout.Button("Clear Define"))
                 {
-                    _waitCompile = ChangeDefine(new DefineBuilder.Define[0]);
+                    _waitCompile = ChangeDefine(new Define[0]);
                     if (_waitCompile)
                     {
                         ShowNotification(new GUIContent("Compiling"));
@@ -104,7 +106,7 @@ namespace Syy.Tools.DefineEditor
             }
         }
 
-        bool ChangeDefine(IEnumerable<DefineBuilder.Define> defines)
+        bool ChangeDefine(IEnumerable<Define> defines)
         {
             var defineStr = string.Join(";", defines.Select(value => value.Name));
             var message = string.IsNullOrEmpty(defineStr) ? "No Define" : defineStr;
@@ -164,17 +166,24 @@ namespace Syy.Tools.DefineEditor
                 public List<Define> Defines = new List<Define>();
                 public string DefineStr { get { return string.Join(";", Defines.Select(value => value.Name)); } }
 
-                public void RegisterDefine(string name)
+                public void RegisterDefine(Define define)
                 {
-                    Defines.Add(new Define() { Name = name } );
+                    Defines.Add(define);
                 }
             }
+        }
+    }
 
-            [Serializable]
-            public class Define
-            {
-                public string Name;
-            }
+    [Serializable]
+    public class Define
+    {
+        public string Name;
+        public string Comment;
+
+        public Define(string name, string comment)
+        {
+            Name = name;
+            Comment = comment;
         }
     }
 
@@ -185,7 +194,7 @@ namespace Syy.Tools.DefineEditor
 
     public interface IDefineGroup
     {
-        void RegisterDefine(string name);
+        void RegisterDefine(Define define);
     }
 
 }
