@@ -25,11 +25,22 @@ namespace Syy.Tools.DefineEditor
         {
             EditorGUILayout.Space();
             var currentDefineStr = GetCurrentDefine();
-            if (string.IsNullOrEmpty(currentDefineStr))
+            var currendDefines = ParseDefine(currentDefineStr);
+            using (new EditorGUILayout.VerticalScope("box"))
             {
-                currentDefineStr = "Nothing";
+                EditorGUILayout.LabelField("■ Current Define");
+                if (currendDefines.Length == 0)
+                {
+                    EditorGUILayout.LabelField("Nothing");
+                }
+                else
+                {
+                    for (int i = 0; i < currendDefines.Length; i++)
+                    {
+                        EditorGUILayout.LabelField($"Define{i + 1} : " + currendDefines[i]);
+                    }
+                }
             }
-            EditorGUILayout.LabelField("Current Define : " + currentDefineStr);
 
             EditorGUILayout.Space();
             using (var scroll = new EditorGUILayout.ScrollViewScope(_scroll))
@@ -120,6 +131,11 @@ namespace Syy.Tools.DefineEditor
             var target = EditorUserBuildSettings.activeBuildTarget;
             var group = BuildPipeline.GetBuildTargetGroup(target);
             return PlayerSettings.GetScriptingDefineSymbolsForGroup(group);
+        }
+
+        string[] ParseDefine(string defines)
+        {
+            return defines.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).Where(value => !string.IsNullOrEmpty(value)).ToArray();
         }
 
         [Serializable]
